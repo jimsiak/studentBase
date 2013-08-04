@@ -27,14 +27,13 @@ implements ActionListener
 	{
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c;
-		
+
 		/*** Student Fields ***/
 		c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = c.weighty = 1.0;
 		c.gridheight = 3;
-		//c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.FIRST_LINE_END;
 		this.studentInputPanel = new StudentInputPanel();
 		add(this.studentInputPanel, c);
@@ -48,19 +47,20 @@ implements ActionListener
 		//c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		this.paymentInputPanel = new PaymentInputPanel();
+		this.paymentInputPanel.setStudentInputPanel(this.studentInputPanel);
 		add(this.paymentInputPanel, c);
 
 		//this.studentInputPanel.comboBox.setMachineListComboBox(this.paymentInputPanel.comboBox);
 
-//		c = new GridBagConstraints();
-//		c.gridx = 0;
-//		c.gridy = 3;
-//		c.weightx = c.weighty = 1.0;
-//		c.gridwidth = 2;
-//		c.gridheight = 2;
-//		c.fill = GridBagConstraints.BOTH;
-//		this.spareInputPanel = new SpareInputPanel();
-//		add(this.spareInputPanel, c);
+		//		c = new GridBagConstraints();
+		//		c.gridx = 0;
+		//		c.gridy = 3;
+		//		c.weightx = c.weighty = 1.0;
+		//		c.gridwidth = 2;
+		//		c.gridheight = 2;
+		//		c.fill = GridBagConstraints.BOTH;
+		//		this.spareInputPanel = new SpareInputPanel();
+		//		add(this.spareInputPanel, c);
 
 		c = new GridBagConstraints();
 		c.gridx = 0;
@@ -99,6 +99,6 @@ implements ActionListener
 
 		this.studentInputPanel.reset();
 		this.paymentInputPanel.reset();
-		this.serviceInputPanel.reset();
+		//this.serviceInputPanel.reset();
 	}
 }

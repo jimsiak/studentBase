@@ -3,8 +3,11 @@ package org.studentbase.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneLayout;
 
 import org.studentbase.Main;
 import org.studentbase.database.Student;

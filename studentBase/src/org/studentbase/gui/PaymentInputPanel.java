@@ -27,11 +27,18 @@ import javax.swing.border.TitledBorder;
 import org.studentbase.database.Course;
 import org.studentbase.database.CourseData;
 import org.studentbase.database.PaymentData;
+import org.studentbase.database.Student;
 
 import com.toedter.calendar.JDateChooser;
 
 public class PaymentInputPanel extends JPanel
 {
+	private StudentInputPanel studentInputPanel = null;
+	
+	public void setStudentInputPanel(StudentInputPanel studentInputPanel) {
+		this.studentInputPanel = studentInputPanel;
+	}
+
 	public CourseListComboBox comboBox;
 
 	public PaymentInputPanel()
@@ -150,8 +157,15 @@ public class PaymentInputPanel extends JPanel
 		}
 		if (course == null) 
 			costField.setText("");
-		else
-			costField.setText(course.getInfoByFieldName("cost_members"));
+		else {
+			Student stud = this.studentInputPanel.getSpecifiedStudent();
+			if (stud == null)
+				costField.setText(course.getInfoByFieldName("cost_nomembers") + "€");
+			else if (stud.isMember())
+				costField.setText(course.getInfoByFieldName("cost_members") + "€");
+			else
+				costField.setText(course.getInfoByFieldName("cost_nomembers") + "€");
+		}
 	}
 
 	public void writeMachineToTextFields(Course mach)

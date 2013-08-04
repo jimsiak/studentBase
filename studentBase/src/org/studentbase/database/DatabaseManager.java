@@ -297,7 +297,7 @@ public class DatabaseManager
 		for (int i = 0; i < StudentData.fieldsName.length; i++) {
 			String fieldname = StudentData.fieldsName[i];
 			String val = stud.getInfoByFieldName(fieldname);
-			if (val.equals(""))
+			if (val == null || val.equals(""))
 				query = query + fieldname + "=NULL";
 			else
 				query = query + fieldname + "= \"" + val + "\"";

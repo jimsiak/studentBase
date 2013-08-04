@@ -16,6 +16,16 @@ implements Comparable
 		this.data = data;
 	}
 
+	public boolean isMember()
+	{
+		String str_val = this.getInfoByFieldName("ismember");
+		if (str_val == null || str_val == "")
+			return false;
+		if (Integer.parseInt(str_val) <= 0)
+			return false;
+		else return true;
+	}
+	
 	public void print() {
 		this.data.print();
 	}

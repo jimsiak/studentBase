@@ -161,8 +161,15 @@ public class StudentInputPanel extends JPanel
 					} catch (Exception e) {
 						JDateChooser dateChooser = (JDateChooser)inputField;
 						((JTextField)dateChooser.getDateEditor().getUiComponent()).setText("");
-						//((JDateChooser)inputField).setDate(new Date());
-						//e.printStackTrace();
+					}
+				}
+				else if (inputField instanceof JCheckBox) {
+					JCheckBox checkBox = (JCheckBox)inputField;
+					checkBox.setSelected(false);
+					if (stud.getInfoByFieldNumber(i) != null) {
+						int value = Integer.parseInt(stud.getInfoByFieldNumber(i));
+						if (value > 0)
+							checkBox.setSelected(true);
 					}
 				}
 			}
@@ -182,11 +189,15 @@ public class StudentInputPanel extends JPanel
 			else if (inputField instanceof JDateChooser) {
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				Date date = ((JDateChooser)inputField).getDate();
-				if (date == null)
-					val = "";
-				else
+				if (date != null)
 					val = dateFormat.format(date);
-				System.out.println("DATE: " + val);
+			}
+			else if (inputField instanceof JCheckBox) {
+				JCheckBox checkBox = ((JCheckBox)inputField);
+				if (checkBox.isSelected())
+					val = "1";
+				else
+					val = "0";
 			}
 				
 			data.updateByFieldName(fieldname, val);
@@ -213,10 +224,14 @@ public class StudentInputPanel extends JPanel
 			Component inputField = StudentData.fieldsInputType[i];
 			if (inputField instanceof JTextField)
 				((JTextField)inputField).setEditable(b);
-			else if (inputField instanceof JTextArea)
+			else if (inputField instanceof JTextArea) {
 				((JTextArea)inputField).setEditable(b);
+				((JTextArea)inputField).setOpaque(b);
+			}
 			else if (inputField instanceof JDateChooser)
 				((JDateChooser)inputField).setEnabled(b);
+			else if (inputField instanceof JCheckBox)
+				((JCheckBox)inputField).setEnabled(b);
 		}
 	}
 

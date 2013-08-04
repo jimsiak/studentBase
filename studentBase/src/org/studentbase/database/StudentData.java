@@ -17,21 +17,21 @@ public class StudentData
   private Map<String, String> data;
   
   public static final String[] fieldsLabels = { 
-	"Όνομα", "Επώμυμο", "Ημερομηνία Γέννησης", "E-mail", 
+	"Επώμυμο", "Όνομα", "Ημερομηνία Γέννησης", "E-mail", 
 	"Τηλ. Επικοινωνίας", "Κινητό", "Τηλ. Εργασίας", 
 	"Επάγγελμα", "Διεύθυνση", "Πληροφορίες", "Μέλος",
 	"Ημερομηνία Εγγραφής"
   };
 
   public static final String[] fieldsTypes = { 
-    "VARCHAR(15)", "VARCHAR(50)", "DATE", "VARCHAR(50)", 
+    "VARCHAR(50)", "VARCHAR(15)", "DATE", "VARCHAR(50)", 
     "VARCHAR(15)", "VARCHAR(15)", "VARCHAR(15)", 
     "VARCHAR(30)", "VARCHAR(30)", "VARCHAR(500)", "BOOLEAN",
     "DATE"
   };
 
   public static final String[] fieldsName = { 
-	"firstname", "lastname", "birthdate", "email",
+	"lastname", "firstname", "birthdate", "email",
 	"phonenumber", "cellphone", "workphone",
 	"job", "address", "moreinfo", "ismember",
 	"registerdate"

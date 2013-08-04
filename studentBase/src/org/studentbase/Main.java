@@ -25,6 +25,7 @@ public class Main
           MainTabbedFrame frame = new MainTabbedFrame();
           frame.setVisible(true);
         } catch (Exception e) {
+        	System.out.println("LLLLOOOOOLLLL");
           e.printStackTrace();
         }
       }

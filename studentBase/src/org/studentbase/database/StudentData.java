@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JCheckBox;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -18,19 +19,22 @@ public class StudentData
   public static final String[] fieldsLabels = { 
 	"Όνομα", "Επώμυμο", "Ημερομηνία Γέννησης", "E-mail", 
 	"Τηλ. Επικοινωνίας", "Κινητό", "Τηλ. Εργασίας", 
-	"Επάγγελμα", "Διεύθυνση", "Πληροφορίες"
+	"Επάγγελμα", "Διεύθυνση", "Πληροφορίες", "Μέλος",
+	"Ημερομηνία Εγγραφής"
   };
 
   public static final String[] fieldsTypes = { 
-    "VARCHAR(15)", "VARCHAR(50)", "VARCHAR(50)", "VARCHAR(50)", 
+    "VARCHAR(15)", "VARCHAR(50)", "DATE", "VARCHAR(50)", 
     "VARCHAR(15)", "VARCHAR(15)", "VARCHAR(15)", 
-    "VARCHAR(30)", "VARCHAR(30)", "VARCHAR(500)"
+    "VARCHAR(30)", "VARCHAR(30)", "VARCHAR(500)", "BOOLEAN",
+    "DATE"
   };
 
   public static final String[] fieldsName = { 
 	"firstname", "lastname", "birthdate", "email",
 	"phonenumber", "cellphone", "workphone",
-	"job", "address", "moreinfo"
+	"job", "address", "moreinfo", "ismember",
+	"registerdate"
   };
 
   public static final Component[] fieldsInputType = { 
@@ -38,7 +42,8 @@ public class StudentData
     new JDateChooser(), new JTextField(), 
     new JTextField(), new JTextField(), 
     new JTextField(), new JTextField(), 
-    new JTextField(), new JTextArea() 
+    new JTextField(), new JTextArea(),
+    new JCheckBox(), new JDateChooser()
   };
 
   public StudentData()

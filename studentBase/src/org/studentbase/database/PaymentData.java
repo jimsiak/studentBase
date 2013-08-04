@@ -7,8 +7,11 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JCheckBox;
+import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.toedter.calendar.JDateChooser;
 
 public class PaymentData
 {
@@ -19,7 +22,7 @@ public class PaymentData
   };
 
   public static final String[] fieldsTypes = { 
-    "VARCHAR(30)", "VARCHAR(30)", "INT", "BOOLEAN" 
+    "DATE", "TIME", "INT", "BOOLEAN" 
   };
 
   public static final String[] fieldsName = { 
@@ -27,8 +30,8 @@ public class PaymentData
   };
 
   public static final Component[] fieldsInputType = { 
-	  new JTextField(10), new JTextField(10), 
-	  new JTextField(10), new JCheckBox() 
+	  new JDateChooser(), new JSpinner(), 
+	  new JTextField(5), new JCheckBox() 
   };
 
   public PaymentData()

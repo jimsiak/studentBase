@@ -80,10 +80,10 @@ implements ActionListener
 		{
 			StudentData data = this.studentInputPanel.getStudentDataFromTextFields();
 			stud = new Student(data);
-			Main.dbmanager.addCustomerToDatabase(stud);
+			Main.dbmanager.addStudentToDatabase(stud);
 		}
 
-		Course mach = this.paymentInputPanel.getSpecifiedMachine();
+		Course mach = this.paymentInputPanel.getSpecifiedCourse();
 		if (mach == null)
 		{
 			CourseData data = this.paymentInputPanel.getMachineDataFromTextFields();

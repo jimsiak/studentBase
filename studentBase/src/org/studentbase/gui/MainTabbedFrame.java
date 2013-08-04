@@ -12,9 +12,9 @@ public class MainTabbedFrame extends JFrame
   public MainTabbedFrame()
   {
     setTitle("ServiceBase");
-    setDefaultCloseOperation(3);
+    setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-    setSize(new Dimension(870, 600));
+    setSize(new Dimension(900, 650));
     this.contentPane = new JTabbedPane();
     this.contentPane.setSize(new Dimension(900, 300));
     this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -22,9 +22,10 @@ public class MainTabbedFrame extends JFrame
 
     NewStudentPanelTab newStudentPanelTab = new NewStudentPanelTab();
     ViewDatabasePanelTab viewDatabasePanelTab = new ViewDatabasePanelTab();
+    ImportExportDatabasePanelTab importExportDatabasePanelTab = new ImportExportDatabasePanelTab();
 
     this.contentPane.addTab("Νέα επίσκεψη", newStudentPanelTab);
     this.contentPane.addTab("Διαχείριση Βάσης", viewDatabasePanelTab);
-    this.contentPane.addTab("Αντίγραφα Ασφαλείας", new ImportExportDatabasePanelTab());
+    this.contentPane.addTab("Αντίγραφα Ασφαλείας", importExportDatabasePanelTab);
   }
 }

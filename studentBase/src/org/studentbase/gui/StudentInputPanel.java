@@ -8,9 +8,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,6 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import org.studentbase.database.PaymentData;
 import org.studentbase.database.Student;
 import org.studentbase.database.StudentData;
 
@@ -59,7 +64,6 @@ public class StudentInputPanel extends JPanel
 			c.weightx = 0.1; 
 			c.weighty = 1.0;
 			c.insets = new Insets(0, 5, 0, 0);
-			//c.gridheight = 1;
 			c.anchor = GridBagConstraints.WEST;
 			JLabel l = new JLabel(labels[i], SwingConstants.LEFT);
 			add(l, c);
@@ -69,6 +73,7 @@ public class StudentInputPanel extends JPanel
 			c = new GridBagConstraints();
 			c.insets = new Insets(3, 3, 3, 3);
 			c.gridx = 1;
+			c.ipady = 10;
 			if (StudentData.fieldsInputType[i] instanceof JTextField) {
 				JTextField textField = (JTextField) StudentData.fieldsInputType[i];
 				textField.setColumns(columns);
@@ -81,11 +86,13 @@ public class StudentInputPanel extends JPanel
 			}
 			else if (StudentData.fieldsInputType[i] instanceof JDateChooser) {
 				JDateChooser dateChooser = (JDateChooser) StudentData.fieldsInputType[i];
-				dateChooser.setDate(new Date());
+				((JTextField)dateChooser.getDateEditor().getUiComponent()).setText("");
+				//dateChooser.setDate(new Date());
 				c.gridy = gridy++;
 				c.weightx = c.weighty = 1.0;
 				c.gridheight = 1;
 				c.gridwidth = 1;
+				c.ipadx = 50;
 				c.anchor = GridBagConstraints.FIRST_LINE_START;
 
 				comp_to_add = dateChooser;
@@ -100,12 +107,24 @@ public class StudentInputPanel extends JPanel
 				textArea.setLineWrap(true);
 				textArea.setWrapStyleWord(true);
 				c.gridy = gridy;
-				gridy += 2;
+				gridy++;
 				c.weightx = 1.0;
 				c.weighty = 2.0;
 				c.gridheight = 1;
 
 				comp_to_add = scrollPane;
+			}
+			else if (StudentData.fieldsInputType[i] instanceof JCheckBox) {
+				JCheckBox checkBox = (JCheckBox) StudentData.fieldsInputType[i];
+				checkBox.setSelected(false);
+				c.gridy = gridy++;
+				c.weightx = c.weighty = 1.0;
+				c.gridheight = 1;
+				c.gridwidth = 1;
+				//c.ipadx = 50;
+				c.anchor = GridBagConstraints.FIRST_LINE_START;
+
+				comp_to_add = checkBox;
 			}
 
 			Border border = BorderFactory.createLineBorder(Color.BLACK);
@@ -123,19 +142,29 @@ public class StudentInputPanel extends JPanel
 		return this.comboBox.getSelectedStudent();
 	}
 
-	public void writeStudentToTextFields(Student cust)
+	public void writeStudentToTextFields(Student stud)
 	{
-		if (cust == null)
-			for (int i = 0; i < StudentData.fieldsName.length; i++) {
-				Component inputField = StudentData.fieldsInputType[i];
-				if ((inputField instanceof JTextField))
-					((JTextField)inputField).setText("");
-			}
+		if (stud == null)
+			this.reset();
 		else
 			for (int i = 0; i < StudentData.fieldsName.length; i++) {
 				Component inputField = StudentData.fieldsInputType[i];
 				if ((inputField instanceof JTextField))
-					((JTextField)inputField).setText(cust.getInfoByFieldNumber(i));
+					((JTextField)inputField).setText(stud.getInfoByFieldNumber(i));
+				else if (inputField instanceof JTextArea)
+					((JTextArea)inputField).setText(stud.getInfoByFieldNumber(i));
+				else if (inputField instanceof JDateChooser) {
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					try {
+						Date date = dateFormat.parse(stud.getInfoByFieldNumber(i));
+						((JDateChooser)inputField).setDate(date);
+					} catch (Exception e) {
+						JDateChooser dateChooser = (JDateChooser)inputField;
+						((JTextField)dateChooser.getDateEditor().getUiComponent()).setText("");
+						//((JDateChooser)inputField).setDate(new Date());
+						//e.printStackTrace();
+					}
+				}
 			}
 	}
 
@@ -144,11 +173,23 @@ public class StudentInputPanel extends JPanel
 		StudentData data = new StudentData();
 		for (int i = 0; i < StudentData.fieldsName.length; i++) {
 			String fieldname = StudentData.fieldsName[i];
+			String val = "";
 			Component inputField = StudentData.fieldsInputType[i];
-			if ((inputField instanceof JTextField)) {
-				String val = ((JTextField)inputField).getText();
-				data.updateByFieldName(fieldname, val);
+			if (inputField instanceof JTextField) 
+				val = ((JTextField)inputField).getText();
+			else if (inputField instanceof JTextArea)
+				val = ((JTextArea)inputField).getText();
+			else if (inputField instanceof JDateChooser) {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = ((JDateChooser)inputField).getDate();
+				if (date == null)
+					val = "";
+				else
+					val = dateFormat.format(date);
+				System.out.println("DATE: " + val);
 			}
+				
+			data.updateByFieldName(fieldname, val);
 		}
 		return data;
 	}
@@ -170,8 +211,12 @@ public class StudentInputPanel extends JPanel
 	{
 		for (int i = 0; i < StudentData.fieldsName.length; i++) {
 			Component inputField = StudentData.fieldsInputType[i];
-			if ((inputField instanceof JTextField))
+			if (inputField instanceof JTextField)
 				((JTextField)inputField).setEditable(b);
+			else if (inputField instanceof JTextArea)
+				((JTextArea)inputField).setEditable(b);
+			else if (inputField instanceof JDateChooser)
+				((JDateChooser)inputField).setEnabled(b);
 		}
 	}
 

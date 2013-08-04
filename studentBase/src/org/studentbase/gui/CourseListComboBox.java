@@ -11,9 +11,11 @@ import org.studentbase.database.Course;
 import org.studentbase.database.CourseData;
 
 public class CourseListComboBox extends JComboBox<Course>
+implements ActionListener
 {
   private PaymentInputPanel parentPanel;
   Course noCourse;
+  Course registrationCourse;
 
   public CourseListComboBox()
   {
@@ -22,26 +24,20 @@ public class CourseListComboBox extends JComboBox<Course>
     data.updateByFieldName("yogatype", "Επιλογή μαθήματος...");
     this.noCourse = new Course(data);
     addItem(this.noCourse);
+    
+    data = new CourseData();
+    data.updateByFieldName("yogatype", "Εγγραφή Μέλους");
+    data.updateByFieldName("cost_members", "10");
+    data.updateByFieldName("cost_nomembers", "10");
+    this.registrationCourse = new Course(data);
+    addItem(this.registrationCourse);
 
     setEditable(false);
-    addActionListener(new ActionListener()
-    {
-      public void actionPerformed(ActionEvent arg0)
-      {
-        CourseListComboBox comboBox = (CourseListComboBox)arg0.getSource();
-        if (comboBox.getSelectedItem().equals(CourseListComboBox.this.noCourse)) {
-          CourseListComboBox.this.parentPanel.writePaymentCost(null);
-          CourseListComboBox.this.parentPanel.setEditable(true);
-        } else {
-          CourseListComboBox.this.parentPanel.writePaymentCost(comboBox.getSelectedCourse());
-          CourseListComboBox.this.parentPanel.setEditable(false);
-        }
-      }
-    });
+    addActionListener(this);
     refresh();
   }
 
-  public boolean newMachineSelected() {
+  public boolean newCourseSelected() {
     return getSelectedItem().equals(this.noCourse);
   }
 
@@ -51,6 +47,7 @@ public class CourseListComboBox extends JComboBox<Course>
 
     DefaultComboBoxModel model = new DefaultComboBoxModel(coursesArray);
     model.insertElementAt(this.noCourse, 0);
+    model.insertElementAt(this.registrationCourse, 1);
     model.setSelectedItem(this.noCourse);
     setModel(model);
 
@@ -66,5 +63,17 @@ public class CourseListComboBox extends JComboBox<Course>
 
   public Course getSelectedCourse() {
     return (Course)getSelectedItem();
+  }
+  
+  public void actionPerformed(ActionEvent arg0)
+  {
+    CourseListComboBox comboBox = (CourseListComboBox)arg0.getSource();
+    if (comboBox.getSelectedItem().equals(CourseListComboBox.this.noCourse)) {
+      CourseListComboBox.this.parentPanel.writePaymentCost(null);
+      CourseListComboBox.this.parentPanel.setEditable(true);
+    } else {
+      CourseListComboBox.this.parentPanel.writePaymentCost(comboBox.getSelectedCourse());
+      CourseListComboBox.this.parentPanel.setEditable(false);
+    }
   }
 }

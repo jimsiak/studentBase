@@ -11,19 +11,19 @@ public class CourseData
 {
 	private Map<String, String> data;
 	public static final String[] fieldsLabels = { 
-		"Είδος Yoga", "Κόστος"
+		"Είδος Yoga", "Κόστος (μέλη)", "Κόστος (μη μέλη)"
 	};
 
 	public static final String[] fieldsTypes = { 
-		"VARCHAR(50)", "INT"
+		"VARCHAR(50)", "INT", "INT"
 	};
 
 	public static final String[] fieldsName = { 
-		"yogatype", "cost"
+		"yogatype", "cost_members", "cost_nomembers"
 	};
 
 	public static final Component[] fieldsInputType = { 
-		new JTextField(10), new JTextField(10)
+		new JTextField(), new JTextField(), new JTextField()
 	};
 
 	public CourseData()

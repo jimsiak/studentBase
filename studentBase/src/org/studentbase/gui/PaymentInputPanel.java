@@ -1,17 +1,27 @@
 package org.studentbase.gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.util.Date;
 
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import org.studentbase.database.Course;
@@ -29,51 +39,103 @@ public class PaymentInputPanel extends JPanel
 		setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		setBorder(new TitledBorder(null, "Πληρωμή", 4, 2, null, null));
 
-		this.comboBox = new CourseListComboBox();
-		this.comboBox.setParentPanel(this);
-		add(this.comboBox);
-		add(new JLabel());
-		add(new JLabel());
-		add(new JLabel());
+		this.setLayout(new GridBagLayout());
+		GridBagConstraints c;
 
 		String[] labels = PaymentData.fieldsLabels;
 		int numPairs = labels.length;
 
+		c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.insets = new Insets(10, 5, 15, 0);
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
+		this.comboBox = new CourseListComboBox();
+		this.comboBox.setParentPanel(this);
+		add(this.comboBox, c);
+		
+		
 		/* For future use. Show description on mouse focus. */
 		//((JTextField)PaymentData.fieldsInputType[0]).setToolTipText("This is description");
 		
+		int gridy = 2;
 		for (int i = 0; i < numPairs; i++) {
-			String name = PaymentData.fieldsName[i];
-			JLabel l = new JLabel(labels[i], 11);
-			add(l);
-			l.setLabelFor(PaymentData.fieldsInputType[i]);
-			if (name.equals("date")) {
-				Date today = new Date();
-				JDateChooser dateChooser = new JDateChooser();
-				dateChooser.setDate(today);
-				add(dateChooser);
-			} else if (name.equals("time")) {
+			c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = gridy;
+			c.weightx = 0.1; 
+			c.weighty = 1.0;
+			c.insets = new Insets(0, 5, 0, 0);
+			c.anchor = GridBagConstraints.WEST;
+			JLabel l = new JLabel(labels[i], SwingConstants.LEFT);
+			add(l, c);
+
+			JComponent comp_to_add = null;
+			int columns = 20;
+			c = new GridBagConstraints();
+			c.insets = new Insets(3, 3, 3, 3);
+			c.gridx = 1;
+			c.ipady = 10;
+			if (PaymentData.fieldsInputType[i] instanceof JTextField) {
+				JTextField textField = (JTextField) PaymentData.fieldsInputType[i];
+				if (textField.getColumns() <= 0)
+					textField.setColumns(columns);
+				c.gridy = gridy++;
+				c.weightx = c.weighty = 1.0;
+				c.gridheight = 1;
+				c.anchor = GridBagConstraints.FIRST_LINE_START;
+
+				comp_to_add = textField;
+			}
+			else if (PaymentData.fieldsInputType[i] instanceof JDateChooser) {
+				JDateChooser dateChooser = (JDateChooser) PaymentData.fieldsInputType[i];
+				dateChooser.setDate(new Date());
+				c.gridy = gridy++;
+				c.weightx = c.weighty = 1.0;
+				c.gridheight = 1;
+				c.gridwidth = 1;
+				c.ipadx = 50;
+				c.anchor = GridBagConstraints.FIRST_LINE_START;
+
+				comp_to_add = dateChooser;
+			}
+			else if (PaymentData.fieldsInputType[i] instanceof JCheckBox) {
+				JCheckBox checkBox = (JCheckBox) PaymentData.fieldsInputType[i];
+				checkBox.setSelected(false);
+				c.gridy = gridy++;
+				c.weightx = c.weighty = 1.0;
+				c.gridheight = 1;
+				c.gridwidth = 1;
+				//c.ipadx = 50;
+				c.anchor = GridBagConstraints.FIRST_LINE_START;
+
+				comp_to_add = checkBox;
+			}
+			else if (PaymentData.fieldsInputType[i] instanceof JSpinner) {
 				SpinnerModel model = new SpinnerDateModel();
-				JSpinner timeSpinner = new JSpinner(model);
+				JSpinner timeSpinner = (JSpinner) PaymentData.fieldsInputType[i];
+				timeSpinner.setModel(model);
 				JComponent editor = new JSpinner.DateEditor(timeSpinner, "HH:mm");
 				timeSpinner.setEditor(editor);
-				add(timeSpinner);
-			} else
-				add(PaymentData.fieldsInputType[i]);
+				c.gridy = gridy++;
+				c.weightx = c.weighty = 1.0;
+				c.gridheight = 1;
+				c.gridwidth = 1;
+				c.ipadx = 15;
+				c.anchor = GridBagConstraints.FIRST_LINE_START;
+
+				comp_to_add = timeSpinner;
+			}
+			
+			Border border = BorderFactory.createLineBorder(Color.BLACK);
+			comp_to_add.setBorder(border);
+			add(comp_to_add, c);
 		}
-
-		if (numPairs % 2 != 0) {
-			numPairs++;
-		}
-
-		numPairs += 2;
-
-		setLayout(new GridLayout(numPairs, 2, 4, 4));
 	}
 
-	public Course getSpecifiedMachine()
+	public Course getSpecifiedCourse()
 	{
-		if (this.comboBox.newMachineSelected()) {
+		if (this.comboBox.newCourseSelected()) {
 			return null;
 		}
 		return this.comboBox.getSelectedCourse();
@@ -89,7 +151,7 @@ public class PaymentInputPanel extends JPanel
 		if (course == null) 
 			costField.setText("");
 		else
-			costField.setText(course.getInfoByFieldName("cost"));
+			costField.setText(course.getInfoByFieldName("cost_members"));
 	}
 
 	public void writeMachineToTextFields(Course mach)

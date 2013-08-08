@@ -354,23 +354,23 @@ public class DatabaseManager
 		}return null;
 	}
 
-	public void addMachineToDatabase(Course mach, Student cust)
+	public void addPaymentToDatabase(Payment payment, Student stud)
 	{
-		int id = getNextId("machines");
-		String query = "INSERT INTO machines SET id=" + id + ", ";
-		query = query + "cid=" + cust.getId() + ", ";
-		for (int i = 0; i < CourseData.fieldsName.length; i++) {
-			String fieldname = CourseData.fieldsName[i];
-			String val = mach.getInfoByFieldName(fieldname);
+		int id = getNextId("payments");
+		String query = "INSERT INTO payments SET id=" + id + ", ";
+		query = query + "sid=" + stud.getId() + ", ";
+		query = query + "cid=" + payment.getCid() + ", ";
+		for (int i = 0; i < PaymentData.fieldsName.length; i++) {
+			String fieldname = PaymentData.fieldsName[i];
+			String val = payment.getInfoByFieldName(fieldname);
 			query = query + fieldname + "= \"" + val + "\"";
-			if (i != CourseData.fieldsName.length - 1)
+			if (i != PaymentData.fieldsName.length - 1)
 				query = query + ", ";
 		}
 		query = query + ";";
 
 		executeUpdate(query);
-		mach.setId(id);
-		//mach.setCid(cust.getId());
+		payment.setId(id);
 	}
 
 	public void createPaymentsTable(String tbname) {

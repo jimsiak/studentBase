@@ -13,67 +13,65 @@ import org.studentbase.database.CourseData;
 public class CourseListComboBox extends JComboBox<Course>
 implements ActionListener
 {
-  private PaymentInputPanel parentPanel;
-  Course noCourse;
-  Course registrationCourse;
+	private PaymentInputPanel parentPanel;
+	Course noCourse;
+	//Course registrationCourse;
 
-  public CourseListComboBox()
-  {
+	public CourseListComboBox()
+	{
 
-    CourseData data = new CourseData();
-    data.updateByFieldName("yogatype", "Επιλογή μαθήματος...");
-    this.noCourse = new Course(data);
-    addItem(this.noCourse);
-    
-    data = new CourseData();
-    data.updateByFieldName("yogatype", "Εγγραφή Μέλους");
-    data.updateByFieldName("cost_members", "10");
-    data.updateByFieldName("cost_nomembers", "10");
-    this.registrationCourse = new Course(data);
-    addItem(this.registrationCourse);
+		CourseData data = new CourseData();
+		data.updateByFieldName("yogatype", "Επιλογή μαθήματος...");
+		this.noCourse = new Course(data);
+		addItem(this.noCourse);
 
-    setEditable(false);
-    addActionListener(this);
-    refresh();
-  }
+		data = new CourseData();
+		data.updateByFieldName("yogatype", "Εγγραφή Μέλους");
+		data.updateByFieldName("cost_members", "10");
+		data.updateByFieldName("cost_nomembers", "10");
+		//this.registrationCourse = new Course(data);
+		//addItem(this.registrationCourse);
 
-  public boolean newCourseSelected() {
-    return getSelectedItem().equals(this.noCourse);
-  }
+		setEditable(false);
+		addActionListener(this);
+		refresh();
+	}
 
-  public void refresh() {
-    List courses = Main.dbmanager.getCoursesList();
-    Course[] coursesArray = (Course[])courses.toArray(new Course[courses.size()]);
+	public boolean newCourseSelected() {
+		return this.getSelectedItem().equals(this.noCourse);
+	}
 
-    DefaultComboBoxModel model = new DefaultComboBoxModel(coursesArray);
-    model.insertElementAt(this.noCourse, 0);
-    model.insertElementAt(this.registrationCourse, 1);
-    model.setSelectedItem(this.noCourse);
-    setModel(model);
+	public void refresh() {
+		List courses = Main.dbmanager.getCoursesList();
+		Course[] coursesArray = (Course[])courses.toArray(new Course[courses.size()]);
 
-    if (this.parentPanel != null) {
-      this.parentPanel.setEditable(true);
-      this.parentPanel.reset();
-    }
-  }
+		DefaultComboBoxModel model = new DefaultComboBoxModel(coursesArray);
+		model.insertElementAt(this.noCourse, 0);
+		//model.insertElementAt(this.registrationCourse, 1);
+		model.setSelectedItem(this.noCourse);
+		setModel(model);
 
-  public void setParentPanel(PaymentInputPanel parentPanel) {
-    this.parentPanel = parentPanel;
-  }
+		if (this.parentPanel != null) {
+			this.parentPanel.setEditable(true);
+			this.parentPanel.reset();
+		}
+	}
 
-  public Course getSelectedCourse() {
-    return (Course)getSelectedItem();
-  }
-  
-  public void actionPerformed(ActionEvent arg0)
-  {
-    CourseListComboBox comboBox = (CourseListComboBox)arg0.getSource();
-    if (comboBox.getSelectedItem().equals(CourseListComboBox.this.noCourse)) {
-      CourseListComboBox.this.parentPanel.writePaymentCost(null);
-      CourseListComboBox.this.parentPanel.setEditable(true);
-    } else {
-      CourseListComboBox.this.parentPanel.writePaymentCost(comboBox.getSelectedCourse());
-      CourseListComboBox.this.parentPanel.setEditable(false);
-    }
-  }
+	public void setParentPanel(PaymentInputPanel parentPanel) {
+		this.parentPanel = parentPanel;
+	}
+
+	public Course getSelectedCourse() {
+		if (this.newCourseSelected())
+			return null;
+		return (Course)getSelectedItem();
+	}
+
+	public void actionPerformed(ActionEvent arg0)
+	{
+		CourseListComboBox comboBox = (CourseListComboBox)arg0.getSource();
+		CourseListComboBox.this.parentPanel.writePaymentCost(comboBox.getSelectedCourse());
+		/*** Dont need this, payment panel is always editable. ***/
+		CourseListComboBox.this.parentPanel.setEditable(!comboBox.newCourseSelected());
+	}
 }

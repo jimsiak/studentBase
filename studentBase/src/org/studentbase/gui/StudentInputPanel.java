@@ -213,8 +213,11 @@ public class StudentInputPanel extends JPanel
 				((JTextField)inputField).setText("");
 			else if (inputField instanceof JTextArea)
 				((JTextArea)inputField).setText("");
-			else if (inputField instanceof JDateChooser)
-				((JDateChooser)inputField).setDate(new Date());
+			else if (inputField instanceof JDateChooser) {
+				JDateChooser dateChooser = (JDateChooser)inputField;
+				((JTextField)dateChooser.getDateEditor().getUiComponent()).setText("");
+				//((JDateChooser)inputField).setDate(new Date());
+			}
 		}
 	}
 

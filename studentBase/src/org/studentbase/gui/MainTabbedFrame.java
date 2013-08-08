@@ -25,7 +25,7 @@ public class MainTabbedFrame extends JFrame
     ImportExportDatabasePanelTab importExportDatabasePanelTab = new ImportExportDatabasePanelTab();
 
     this.contentPane.addTab("Νέα επίσκεψη", newStudentPanelTab);
-    this.contentPane.addTab("Διαχείριση Βάσης", viewDatabasePanelTab);
-    this.contentPane.addTab("Αντίγραφα Ασφαλείας", importExportDatabasePanelTab);
+    //this.contentPane.addTab("Διαχείριση Βάσης", viewDatabasePanelTab);
+    //this.contentPane.addTab("Αντίγραφα Ασφαλείας", importExportDatabasePanelTab);
   }
 }

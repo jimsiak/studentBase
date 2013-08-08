@@ -50,18 +50,6 @@ implements ActionListener
 		this.paymentInputPanel.setStudentInputPanel(this.studentInputPanel);
 		add(this.paymentInputPanel, c);
 
-		//this.studentInputPanel.comboBox.setMachineListComboBox(this.paymentInputPanel.comboBox);
-
-		//		c = new GridBagConstraints();
-		//		c.gridx = 0;
-		//		c.gridy = 3;
-		//		c.weightx = c.weighty = 1.0;
-		//		c.gridwidth = 2;
-		//		c.gridheight = 2;
-		//		c.fill = GridBagConstraints.BOTH;
-		//		this.spareInputPanel = new SpareInputPanel();
-		//		add(this.spareInputPanel, c);
-
 		c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 6;
@@ -82,23 +70,14 @@ implements ActionListener
 			stud = new Student(data);
 			Main.dbmanager.addStudentToDatabase(stud);
 		}
-
-		Course mach = this.paymentInputPanel.getSpecifiedCourse();
-		if (mach == null)
-		{
-			CourseData data = this.paymentInputPanel.getMachineDataFromTextFields();
-			mach = new Course(data);
-			Main.dbmanager.addMachineToDatabase(mach, stud);
+		
+		/*** Get selected payment data, add SID and add it to database. ***/
+		Payment payment = this.paymentInputPanel.getSpecifiedPayment();
+		if (payment == null)
+			/* FIXME: Error here.... We cannot continue... */
+			System.out.println("getSpecifiedPayment() returned NULL...");
+		else {
+			Main.dbmanager.addPaymentToDatabase(payment, stud);
 		}
-
-		Payment serv = this.serviceInputPanel.getSpecifiedService();
-		Main.dbmanager.addServiceToDatabase(serv, mach);
-
-		List spares = this.spareInputPanel.getSpares();
-		Main.dbmanager.addSpareListToDatabase(spares, serv);
-
-		this.studentInputPanel.reset();
-		this.paymentInputPanel.reset();
-		//this.serviceInputPanel.reset();
 	}
 }

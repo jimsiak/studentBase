@@ -5,8 +5,9 @@ import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -14,7 +15,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -26,6 +26,7 @@ import javax.swing.border.TitledBorder;
 
 import org.studentbase.database.Course;
 import org.studentbase.database.CourseData;
+import org.studentbase.database.Payment;
 import org.studentbase.database.PaymentData;
 import org.studentbase.database.Student;
 
@@ -134,18 +135,24 @@ public class PaymentInputPanel extends JPanel
 				comp_to_add = timeSpinner;
 			}
 			
+			this.setEditable(false);
 			Border border = BorderFactory.createLineBorder(Color.BLACK);
 			comp_to_add.setBorder(border);
 			add(comp_to_add, c);
 		}
 	}
 
-	public Course getSpecifiedCourse()
+	public Payment getSpecifiedPayment()
 	{
-		if (this.comboBox.newCourseSelected()) {
+		Course course = this.comboBox.getSelectedCourse();
+		if (course == null)
 			return null;
-		}
-		return this.comboBox.getSelectedCourse();
+		
+		PaymentData data = getPaymentDataFromTextFields();
+		Payment payment = new Payment(data);
+		payment.setCid(course.getId());
+		
+		return payment;
 	}
 
 	public void writePaymentCost(Course course)
@@ -168,7 +175,7 @@ public class PaymentInputPanel extends JPanel
 		}
 	}
 
-	public void writeMachineToTextFields(Course mach)
+	public void writePaymentToTextFields(Course mach)
 	{
 		if (mach == null) {
 			for (int i = 0; i < CourseData.fieldsName.length; i++) {
@@ -185,33 +192,76 @@ public class PaymentInputPanel extends JPanel
 			}
 	}
 
-	public CourseData getMachineDataFromTextFields() {
-		CourseData data = new CourseData();
-		for (int i = 0; i < CourseData.fieldsName.length; i++) {
-			String fieldname = CourseData.fieldsName[i];
-			Component inputField = CourseData.fieldsInputType[i];
-			if ((inputField instanceof JTextField)) {
-				String val = ((JTextField)inputField).getText();
-				data.updateByFieldName(fieldname, val);
+	public PaymentData getPaymentDataFromTextFields() {
+		PaymentData data = new PaymentData();
+		for (int i = 0; i < PaymentData.fieldsName.length; i++) {
+			String fieldname = PaymentData.fieldsName[i];
+			String val = "";
+			Component inputField = PaymentData.fieldsInputType[i];
+			if (inputField instanceof JTextField) { 
+				val = ((JTextField)inputField).getText();
+				if (PaymentData.fieldsName[i].equals("cost")) {
+					val = val.replace("€", "");
+				}
 			}
+			else if (inputField instanceof JTextArea)
+				val = ((JTextArea)inputField).getText();
+			else if (inputField instanceof JDateChooser) {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = ((JDateChooser)inputField).getDate();
+				if (date != null)
+					val = dateFormat.format(date);
+			}
+			else if (inputField instanceof JCheckBox) {
+				JCheckBox checkBox = ((JCheckBox)inputField);
+				if (checkBox.isSelected())
+					val = "1";
+				else
+					val = "0";
+			}
+			else if (inputField instanceof JSpinner) {
+				JSpinner spinner = ((JSpinner)inputField);
+				Date date = (Date)spinner.getValue();
+				DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+				val = dateFormat.format(date);
+				System.out.println("SPINNER: " + val);
+			}
+				
+			data.updateByFieldName(fieldname, val);
 		}
 		return data;
+		
 	}
 
 	public void reset() {
-		for (int i = 0; i < CourseData.fieldsName.length; i++) {
-			Component inputField = CourseData.fieldsInputType[i];
+		this.comboBox.refresh();
+		for (int i = 0; i < PaymentData.fieldsName.length; i++) {
+			Component inputField = PaymentData.fieldsInputType[i];
 			if ((inputField instanceof JTextField))
 				((JTextField)inputField).setText("");
+			else if (inputField instanceof JTextArea)
+				((JTextArea)inputField).setText("");
+			else if (inputField instanceof JDateChooser) {
+				JDateChooser dateChooser = (JDateChooser)inputField;
+				((JDateChooser)inputField).setDate(new Date());
+			}
 		}
 	}
 
 	public void setEditable(boolean b)
 	{
-		for (int i = 0; i < CourseData.fieldsName.length; i++) {
-			Component inputField = CourseData.fieldsInputType[i];
-			if ((inputField instanceof JTextField))
+		for (int i = 0; i < PaymentData.fieldsName.length; i++) {
+			Component inputField = PaymentData.fieldsInputType[i];
+			if (inputField instanceof JTextField)
 				((JTextField)inputField).setEditable(b);
+			else if (inputField instanceof JTextArea) {
+				((JTextArea)inputField).setEditable(b);
+				((JTextArea)inputField).setOpaque(b);
+			}
+			else if (inputField instanceof JDateChooser)
+				((JDateChooser)inputField).setEnabled(b);
+			else if (inputField instanceof JCheckBox)
+				((JCheckBox)inputField).setEnabled(b);
 		}
 	}
 }

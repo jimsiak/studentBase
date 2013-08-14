@@ -2,12 +2,15 @@ package org.studentbase;
 
 import java.awt.EventQueue;
 
+import javax.swing.JFrame;
+
 import org.studentbase.database.DatabaseManager;
 import org.studentbase.gui.MainTabbedFrame;
 
 public class Main
 {
 	public static DatabaseManager dbmanager;
+	public static MainTabbedFrame mainFrame;
 
 	public static void main(String[] args)
 	{
@@ -22,8 +25,8 @@ public class Main
 					Main.dbmanager.createPaymentsTable("payments");
 					//Main.dbmanager.createSpareTable("spares");
 
-					MainTabbedFrame frame = new MainTabbedFrame();
-					frame.setVisible(true);
+					mainFrame = new MainTabbedFrame();
+					mainFrame.setVisible(true);
 				} catch (Exception e) {
 					System.out.println("LLLLOOOOOLLLL");
 					e.printStackTrace();

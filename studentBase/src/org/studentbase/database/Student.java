@@ -45,9 +45,19 @@ implements Comparable
 			System.exit(1);
 		}
 		Student otherStud = (Student)obj;
-		String myName = this.data.getInfoByFieldName("lastname");
-		String otherName = otherStud.data.getInfoByFieldName("lastname");
-		return myName.compareToIgnoreCase(otherName);
+		String myLastName = this.getInfoByFieldName("lastname");
+		String otherLastName = otherStud.getInfoByFieldName("lastname");
+		if (myLastName != otherLastName)
+			return myLastName.compareToIgnoreCase(otherLastName);
+		
+		String myFirstName = this.getInfoByFieldName("firstname");
+		String otherFirstName = otherStud.getInfoByFieldName("firstname");
+		if (myFirstName == null)
+			myFirstName = "";
+		if (otherFirstName == null)
+			otherFirstName = "";
+		
+		return myFirstName.compareTo(otherFirstName);
 	}
 
 	public void setId(int id) {
@@ -60,7 +70,9 @@ implements Comparable
 
 	public String toString()
 	{
-		return this.data.getInfoByFieldName("lastname") + " " + 
-				this.data.getInfoByFieldName("firstname");
+		String firstname = this.getInfoByFieldName("firstname");
+		if (firstname == null)
+			firstname = "";
+		return this.getInfoByFieldName("lastname") + " " + firstname;
 	}
 }

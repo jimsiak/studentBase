@@ -18,20 +18,21 @@ public class PaymentData
   private Map<String, String> data;
   
   public static final String[] fieldsLabels = { 
-    "Ημερομηνία", "Ώρα", "Κόστος", "Εξοφλήθη" 
+    "Ημερομηνία", "Ώρα", "Κόστος", "Εξοφλήθη", "Απόδειξη"
   };
 
   public static final String[] fieldsTypes = { 
-    "DATE", "TIME", "INT", "BOOLEAN" 
+    "DATE", "TIME", "INT", "BOOLEAN", "BOOLEAN"
   };
 
   public static final String[] fieldsName = { 
-    "date", "time", "cost", "payed" 
+    "date", "time", "cost", "payed", "receipt"
   };
 
   public static final Component[] fieldsInputType = { 
 	  new JDateChooser(), new JSpinner(), 
-	  new JTextField(5), new JCheckBox() 
+	  new JTextField(5), new JCheckBox() ,
+	  new JCheckBox()
   };
 
   public PaymentData()

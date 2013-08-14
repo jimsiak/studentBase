@@ -51,10 +51,10 @@ implements ActionListener
 		model.setSelectedItem(this.noCourse);
 		setModel(model);
 
-		if (this.parentPanel != null) {
-			this.parentPanel.setEditable(true);
-			this.parentPanel.reset();
-		}
+//		if (this.parentPanel != null) {
+//			this.parentPanel.setEditable(true);
+//			this.parentPanel.reset();
+//		}
 	}
 
 	public void setParentPanel(PaymentInputPanel parentPanel) {

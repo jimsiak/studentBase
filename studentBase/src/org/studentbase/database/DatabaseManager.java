@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
+import org.studentbase.Main;
 import org.studentbase.file.DatabaseReadFile;
 import org.studentbase.file.DatabaseWriteFile;
 import org.studentbase.gui.DbConnectionErrorDialog;
@@ -188,6 +191,8 @@ public class DatabaseManager
 			System.out.println(query);
 			stmt.executeUpdate(query);
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(Main.mainFrame, e.getLocalizedMessage(),
+					"Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
@@ -249,6 +254,39 @@ public class DatabaseManager
 		return students;
 	}
 
+	public int getStudentNumberOfVisits(Student stud)
+	{
+		int ret = -1;
+		try 
+		{
+			String query = "SELECT COUNT(*) FROM payments WHERE sid=" + stud.getId();
+			ResultSet rs = executeQuery(query);
+			while (rs.next())
+				ret = rs.getInt(1);
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			ret = -1;
+		}
+		return ret;
+	}
+	
+	public String getStudentLastVisit(Student stud) {
+		String ret = null;
+		try
+		{
+			String query = "SELECT MAX(date) FROM payments WHERE sid=" + stud.getId();
+			ResultSet rs = executeQuery(query);
+			while (rs.next())
+				ret = rs.getString(1);
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			ret = null;
+		}
+		return ret;
+	}
+	
 	public String[] getStudentsFieldsByName(String fieldname)
 	{
 		try
@@ -315,6 +353,49 @@ public class DatabaseManager
 		executeUpdate(query);
 	}
 
+	public void addCourseToDatabase(Course course)
+	{
+		int id = getNextId("courses");
+		String query = "INSERT INTO courses SET id=" + id + ", ";
+		for (int i = 0; i < CourseData.fieldsName.length; i++) {
+			String fieldname = CourseData.fieldsName[i];
+			String val = course.getInfoByFieldName(fieldname);
+			if (val == null || val.equals(""))
+				query = query + fieldname + "=NULL";
+			else
+				query = query + fieldname + "= \"" + val + "\"";
+			if (i != CourseData.fieldsName.length - 1)
+				query = query + ", ";
+		}
+		query = query + ";";
+
+		executeUpdate(query);
+		course.setId(id);
+	}
+	
+	public Course getCourseFromDatabaseById(int id)
+	{
+		try {
+			String query = "SELECT * FROM courses where id = " + id + ";";
+			ResultSet rs = executeQuery(query);
+			if (rs.next()) {
+				CourseData data = new CourseData();
+				for (int i=1; i <= CourseData.fieldsName.length; i++) {
+					data.updateByFieldNum(i-1, rs.getString(i+1));
+				}
+				Course course = new Course(data);
+				course.setId(id);
+				return course;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/*** Become a member. ***/
+	static public Course registrationCourse = null;
+	
 	public void createCoursesTable(String tbname) {
 		String[] courseFieldName = CourseData.fieldsName;
 		String[] courseFieldType = CourseData.fieldsTypes;
@@ -326,6 +407,38 @@ public class DatabaseManager
 		query = query + ") DEFAULT CHARACTER SET utf8;";
 
 		executeUpdate(query);
+		
+		/** Insert some courses hardcoded **/
+		String defaultCourses[][] = {{"Εγγραφή Μέλους", "10", "10"}, 
+				{"Aerial yoga", "10", "20"},
+				{"Hatha yoga", "15", "25"},
+				{"Gentle yoga", "20", "30"},
+				{"Meditation yoga", "25", "35"},
+				{"Morning light yoga", "30", "40"}};
+		
+		for (int i=0; i < defaultCourses.length; i++) {
+			CourseData data = new CourseData();
+			for (int j = 0; j < defaultCourses[i].length; j++) {
+				data.updateByFieldNum(j, defaultCourses[i][j]);
+			}
+			Course course = new Course(data);
+				
+			Course oldCourse = getCourseFromDatabaseById(i+1);
+			if (oldCourse == null)
+				addCourseToDatabase(course);
+			else if (!oldCourse.getInfoByFieldName("yogatype").equals(defaultCourses[i][0]))
+				System.out.println("Course with id " + i+1 + " exists but is not " 
+									+ defaultCourses[i][0]);
+			else
+				course.setId(i+1);
+			
+			if (i==0)
+				registrationCourse = course;
+			
+			System.out.println("HI: i = " + i + " courseid = " + course.getId());
+				 
+		}
+		
 	}
 
 	public List<Course> getCoursesList() {
@@ -343,7 +456,6 @@ public class DatabaseManager
 				}
 				Course course = new Course(courseData);
 				course.setId(id);
-				//mach.setCid(cust.getId());
 				list.add(course);
 			}
 

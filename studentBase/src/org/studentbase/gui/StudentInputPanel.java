@@ -3,13 +3,10 @@ package org.studentbase.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -18,7 +15,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -26,7 +22,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import org.studentbase.database.PaymentData;
 import org.studentbase.database.Student;
 import org.studentbase.database.StudentData;
 
@@ -35,6 +30,8 @@ import com.toedter.calendar.JDateChooser;
 public class StudentInputPanel extends JPanel
 {
 	public StudentListComboBox comboBox;
+	private StudentListComboBoxRefreshButton studentListComboBoxRefreshButton;
+	private StudentStatisticsPanel studentStatisticsPanel;
 
 	public StudentInputPanel()
 	{
@@ -47,6 +44,7 @@ public class StudentInputPanel extends JPanel
 		String[] labels = StudentData.fieldsLabels;
 		int numPairs = labels.length;
 
+		/*** Students list combo box ***/
 		c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
@@ -55,7 +53,18 @@ public class StudentInputPanel extends JPanel
 		this.comboBox = new StudentListComboBox();
 		this.comboBox.setParentPanel(this);
 		add(this.comboBox, c);
-
+		
+		/*** Refresh button ***/
+		c = new GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 0;
+		c.insets = new Insets(10, 5, 15, 0);
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
+		this.studentListComboBoxRefreshButton = 
+				new StudentListComboBoxRefreshButton(this.comboBox);
+		add(studentListComboBoxRefreshButton, c);
+		
+		
 		int gridy = 2;
 		for (int i = 0; i < numPairs; i++) {
 			c = new GridBagConstraints();
@@ -240,5 +249,18 @@ public class StudentInputPanel extends JPanel
 
 	public StudentListComboBox getComboBox() {
 		return this.comboBox;
+	}
+
+	public StudentStatisticsPanel getStudentStatisticsPanel() {
+		return studentStatisticsPanel;
+	}
+
+	public void setStudentStatisticsPanel(
+			StudentStatisticsPanel studentStatisticsPanel) {
+		this.studentStatisticsPanel = studentStatisticsPanel;
+	}
+
+	public StudentListComboBoxRefreshButton getStudentListComboBoxRefreshButton() {
+		return studentListComboBoxRefreshButton;
 	}
 }

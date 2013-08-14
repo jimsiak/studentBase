@@ -1,5 +1,6 @@
 package org.studentbase.gui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -72,5 +73,6 @@ implements ActionListener
 			StudentListComboBox.this.parentPanel.setEditable(false);
 			//StudentListComboBox.this.machineListComboBox.refresh(comboBox.getSelectedCustomer());
 		}
+		StudentListComboBox.this.parentPanel.getStudentStatisticsPanel().refresh();
 	}
 }

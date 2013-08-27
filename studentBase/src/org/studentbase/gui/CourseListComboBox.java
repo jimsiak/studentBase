@@ -37,6 +37,26 @@ implements ActionListener
 		refresh();
 	}
 
+	public CourseListComboBox(String choiceStr)
+	{
+
+		CourseData data = new CourseData();
+		data.updateByFieldName("yogatype", choiceStr);
+		this.noCourse = new Course(data);
+		addItem(this.noCourse);
+
+		data = new CourseData();
+		data.updateByFieldName("yogatype", "Εγγραφή Μέλους");
+		data.updateByFieldName("cost_members", "10");
+		data.updateByFieldName("cost_nomembers", "10");
+		//this.registrationCourse = new Course(data);
+		//addItem(this.registrationCourse);
+
+		setEditable(false);
+		addActionListener(this);
+		refresh();
+	}
+	
 	public boolean newCourseSelected() {
 		return this.getSelectedItem().equals(this.noCourse);
 	}

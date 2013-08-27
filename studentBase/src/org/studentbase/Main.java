@@ -26,6 +26,7 @@ public class Main
 					//Main.dbmanager.createSpareTable("spares");
 
 					mainFrame = new MainTabbedFrame();
+					mainFrame.pack();
 					mainFrame.setVisible(true);
 				} catch (Exception e) {
 					System.out.println("LLLLOOOOOLLLL");

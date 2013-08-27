@@ -1,8 +1,6 @@
 package org.studentbase.database;
 
-import java.io.PrintStream;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -353,6 +351,48 @@ public class DatabaseManager
 		executeUpdate(query);
 	}
 
+	public Object[][] getStudentPaymentsByFilter(Student stud, Course course) 
+	{	
+		String query = "SELECT s.lastname, s.firstname, c.yogatype, " +
+					   "p.date, p.time, p.cost, p.payed, p.receipt " + 
+		               "FROM students AS s JOIN payments AS p JOIN courses AS c " +
+					   "WHERE s.id=p.sid AND c.id=p.cid";
+		
+		if (stud != null) 
+			query += " AND s.id=" + stud.getId();
+		if (course != null)
+			query += " AND c.id=" + course.getId();
+		
+		query += " ORDER BY s.lastname";
+		
+		try {
+			Object[][] ret = null;
+			int length = 0;
+			
+			ResultSet rs = executeQuery(query);
+			if (rs.last()) {
+				length = rs.getRow();
+				rs.beforeFirst();
+			}
+			
+			ret = new Object[length][8];
+			int i = 0;
+			while (rs.next()) {
+				for (int j=0; j < 8; j++)
+					ret[i][j] = rs.getString(j+1);
+				ret[i][5] = new Integer((String)ret[i][5]);
+				ret[i][6] = new Boolean(((String)ret[i][6]).equals("1"));
+				ret[i][7] = new Boolean(((String)ret[i][7]).equals("1"));
+				i++;
+			}
+			
+			return ret;
+		}catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public void addCourseToDatabase(Course course)
 	{
 		int id = getNextId("courses");
@@ -413,7 +453,7 @@ public class DatabaseManager
 				{"Aerial yoga", "10", "20"},
 				{"Hatha yoga", "15", "25"},
 				{"Gentle yoga", "20", "30"},
-				{"Meditation yoga", "25", "35"},
+				{"Meditation", "25", "35"},
 				{"Morning light yoga", "30", "40"}};
 		
 		for (int i=0; i < defaultCourses.length; i++) {
@@ -427,7 +467,7 @@ public class DatabaseManager
 			if (oldCourse == null)
 				addCourseToDatabase(course);
 			else if (!oldCourse.getInfoByFieldName("yogatype").equals(defaultCourses[i][0]))
-				System.out.println("Course with id " + i+1 + " exists but is not " 
+				System.out.println("Course with id " + Integer.toString(i+1) + " exists but is not " 
 									+ defaultCourses[i][0]);
 			else
 				course.setId(i+1);

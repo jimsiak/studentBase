@@ -33,6 +33,18 @@ implements ActionListener
 		refresh();
 	}
 
+	public StudentListComboBox(String noChoiceString)
+	{
+		StudentData data = new StudentData();
+		data.updateByFieldName("lastname", noChoiceString);
+		this.newStud = new Student(data);
+		addItem(this.newStud);
+
+		setEditable(false);
+		addActionListener(this);
+		refresh();
+	}
+	
 	public void refresh() {
 		Student[] students = Main.dbmanager.getStudentsArray();
 		Arrays.sort(students);

@@ -32,7 +32,8 @@ implements ActionListener{
 		this.addActionListener(this);
 		this.setToolTipText("Ανανέωση της λίστας με τους μαθητές");
 
-		ImageIcon bg_img = new ImageIcon("images/Button-Refresh-icon.jpg");
+		//ImageIcon bg_img = new ImageIcon("/images/Button-Refresh-icon.jpg");
+		ImageIcon bg_img = new ImageIcon(getClass().getResource("/images/Button-Refresh-icon.jpg"));
 		ImageIcon thumb = new ImageIcon(getScaledImage(bg_img.getImage(), width, height));
 
 		this.setIcon(thumb);

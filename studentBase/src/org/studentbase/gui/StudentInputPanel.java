@@ -136,6 +136,11 @@ public class StudentInputPanel extends JPanel
 				comp_to_add = checkBox;
 			}
 
+			/* Disable member checkBox and DateChooser */
+			if (StudentData.fieldsName[i].equals("ismember") || 
+					StudentData.fieldsName[i].equals("registerdate"))
+				comp_to_add.setEnabled(false);
+			
 			Border border = BorderFactory.createLineBorder(Color.BLACK);
 			comp_to_add.setBorder(border);
 			add(comp_to_add, c);
@@ -226,6 +231,9 @@ public class StudentInputPanel extends JPanel
 				JDateChooser dateChooser = (JDateChooser)inputField;
 				((JTextField)dateChooser.getDateEditor().getUiComponent()).setText("");
 				//((JDateChooser)inputField).setDate(new Date());
+			} else if (inputField instanceof JCheckBox) {
+				JCheckBox checkBox = (JCheckBox)inputField;
+				checkBox.setSelected(false);
 			}
 		}
 	}
@@ -244,6 +252,11 @@ public class StudentInputPanel extends JPanel
 				((JDateChooser)inputField).setEnabled(b);
 			else if (inputField instanceof JCheckBox)
 				((JCheckBox)inputField).setEnabled(b);
+			
+			/* Disable member checkBox and DateChooser */
+			if (StudentData.fieldsName[i].equals("ismember") || 
+					StudentData.fieldsName[i].equals("registerdate"))
+				inputField.setEnabled(false);
 		}
 	}
 

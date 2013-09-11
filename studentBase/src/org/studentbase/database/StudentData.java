@@ -24,7 +24,7 @@ public class StudentData
   };
 
   public static final String[] fieldsTypes = { 
-    "VARCHAR(50) NOT NULL", "VARCHAR(15)", "DATE", "VARCHAR(50)", 
+    "VARCHAR(50) NOT NULL", "VARCHAR(15) NOT NULL", "DATE", "VARCHAR(50)", 
     "VARCHAR(15)", "VARCHAR(15)", "VARCHAR(15)", 
     "VARCHAR(30)", "VARCHAR(30)", "VARCHAR(500)", "BOOLEAN",
     "DATE"

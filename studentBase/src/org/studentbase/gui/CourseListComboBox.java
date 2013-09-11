@@ -2,7 +2,9 @@ package org.studentbase.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
@@ -64,6 +66,7 @@ implements ActionListener
 	public void refresh() {
 		List courses = Main.dbmanager.getCoursesList();
 		Course[] coursesArray = (Course[])courses.toArray(new Course[courses.size()]);
+		Arrays.sort(coursesArray);
 
 		DefaultComboBoxModel model = new DefaultComboBoxModel(coursesArray);
 		model.insertElementAt(this.noCourse, 0);

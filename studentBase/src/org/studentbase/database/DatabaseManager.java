@@ -351,7 +351,8 @@ public class DatabaseManager
 		executeUpdate(query);
 	}
 
-	public Object[][] getStudentPaymentsByFilter(Student stud, Course course) 
+	public Object[][] getStudentPaymentsByFilter(Student stud, Course course,
+			Integer payed, Integer receipt) 
 	{	
 		String query = "SELECT s.lastname, s.firstname, c.yogatype, " +
 					   "p.date, p.time, p.cost, p.payed, p.receipt " + 
@@ -362,6 +363,10 @@ public class DatabaseManager
 			query += " AND s.id=" + stud.getId();
 		if (course != null)
 			query += " AND c.id=" + course.getId();
+		if (payed > -1)
+			query += " AND p.payed=" + Integer.toString(payed);
+		if (receipt > -1)
+			query += " AND p.receipt=" + Integer.toString(receipt);
 		
 		query += " ORDER BY s.lastname";
 		
@@ -386,6 +391,44 @@ public class DatabaseManager
 				i++;
 			}
 			
+			return ret;
+		}catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public String[] getStudentPaymentsByFilterTotalStats(Student stud, Course course, 
+			Integer payed, Integer receipt) 
+	{	
+		String query = "SELECT COUNT(*), SUM(p.cost)" + 
+		               "FROM students AS s JOIN payments AS p JOIN courses AS c " +
+					   "WHERE s.id=p.sid AND c.id=p.cid";
+		
+		if (stud != null) 
+			query += " AND s.id=" + stud.getId();
+		if (course != null)
+			query += " AND c.id=" + course.getId();
+		if (payed > -1)
+			query += " AND p.payed=" + Integer.toString(payed);
+		if (receipt > -1)
+			query += " AND p.receipt=" + Integer.toString(receipt);
+		
+		query += " ORDER BY s.lastname";
+		
+		try {
+			String[] ret = {"0", "-"};
+			
+			ResultSet rs = executeQuery(query);
+			
+			while (rs.next()) {
+				ret[0] = rs.getString(1);
+				ret[1] = rs.getString(2);
+			}
+			
+			/* Set default values if null occurs. */
+			if (ret[0] == null) ret[1] = "0";
+			if (ret[1] == null) ret[1] = "-";
 			return ret;
 		}catch (SQLException e) {
 			e.printStackTrace();

@@ -262,6 +262,8 @@ public class PaymentInputPanel extends JPanel
 				((JDateChooser)inputField).setEnabled(b);
 			else if (inputField instanceof JCheckBox)
 				((JCheckBox)inputField).setEnabled(b);
+			else if (inputField instanceof JSpinner)
+				((JSpinner)inputField).setEnabled(b);
 		}
 	}
 }

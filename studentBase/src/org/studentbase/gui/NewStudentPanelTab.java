@@ -103,6 +103,18 @@ implements ActionListener
 		{
 			StudentData data = this.studentInputPanel.getStudentDataFromTextFields();
 			
+			if (data.getInfoByFieldName("lastname").equals("")) {
+				JOptionPane.showMessageDialog(Main.mainFrame, "Το πεδίο 'Επώνυμο' δεν μπορεί να είναι κενό.", 
+						"Σφάλμα!", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			if (data.getInfoByFieldName("firstname").equals("")) {
+				JOptionPane.showMessageDialog(Main.mainFrame, "Το πεδίο 'Όνομα' δεν μπορεί να είναι κενό.", 
+						"Σφάλμα!", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+				
+			
 			/*** If this is a payment for registration student becomes a member. ***/
 			if (payment != null &&
 					payment.getCid() == Main.dbmanager.registrationCourse.getId()) {

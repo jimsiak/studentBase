@@ -33,16 +33,19 @@ public class Course implements Comparable
 		return this.data.getInfoByFieldName("yogatype");
 	}
 
-	/* FIXME: compare using which field? */
 	public int compareTo(Object obj)
 	{
 		if (!(obj instanceof Course)) {
-			System.err.println("Machine can only be compared with Machine");
+			System.err.println("Course can only be compared with Course");
 			System.exit(1);
 		}
 		Course otherCourse = (Course)obj;
-		String myName = this.data.getInfoByFieldName("model");
-		String otherName = otherCourse.data.getInfoByFieldName("model");
+		String myName = this.data.getInfoByFieldName("yogatype");
+		if (myName.contains("Εγγραφή"))
+			return -1;
+		String otherName = otherCourse.data.getInfoByFieldName("yogatype");
+		if (otherName.contains("Εγγραφή"))
+			return 1;
 		return myName.compareToIgnoreCase(otherName);
 	}
 

@@ -13,6 +13,9 @@ public class MyDefaultTableModel extends DefaultTableModel
 		} catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
 			return String.class;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -20,4 +23,6 @@ public class MyDefaultTableModel extends DefaultTableModel
 	{
 		return false;
 	}
+	
+	
 }

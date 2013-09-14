@@ -9,7 +9,7 @@ import org.studentbase.gui.MainTabbedFrame;
 
 public class Main
 {
-	public static String VersionString = "0.1";
+	public static String VersionString = "0.1 Beta";
 	
 	public static DatabaseManager dbmanager;
 	public static MainTabbedFrame mainFrame;
@@ -27,7 +27,7 @@ public class Main
 					Main.dbmanager.createPaymentsTable("payments");
 					//Main.dbmanager.createSpareTable("spares");
 
-					mainFrame = new MainTabbedFrame();
+					mainFrame = new MainTabbedFrame("Yoga students/courses management (version " + VersionString + ")");
 					mainFrame.pack();
 					mainFrame.setVisible(true);
 				} catch (Exception e) {

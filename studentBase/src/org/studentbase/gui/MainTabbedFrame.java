@@ -17,9 +17,10 @@ implements ChangeListener
 	private StatisticsPanelTab statisticsPanelTab;
 	private PaymentsReceiptsPanelTab paymentsReceiptsPanelTab;
 	
-	public MainTabbedFrame()
+	public MainTabbedFrame(String title)
 	{
-		setTitle("Yoga students/courses management");
+		super(title);
+		//setTitle(title);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		setSize(new Dimension(700, 810));

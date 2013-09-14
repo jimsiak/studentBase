@@ -101,8 +101,10 @@ implements ActionListener
 		Student stud = this.studentInputPanel.getSpecifiedStudent();
 		if (stud == null)
 		{
+			/*** Get studentData from textfields. ***/
 			StudentData data = this.studentInputPanel.getStudentDataFromTextFields();
 			
+			/*** Lastname and Firstname cannot be null. ***/
 			if (data.getInfoByFieldName("lastname").equals("")) {
 				JOptionPane.showMessageDialog(Main.mainFrame, "Το πεδίο 'Επώνυμο' δεν μπορεί να είναι κενό.", 
 						"Σφάλμα!", JOptionPane.ERROR_MESSAGE);

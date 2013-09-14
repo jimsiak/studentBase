@@ -258,6 +258,9 @@ public class DatabaseManager
 		try 
 		{
 			String query = "SELECT COUNT(*) FROM payments WHERE sid=" + stud.getId();
+			/*** Do not count registration as a visit. ***/
+			query += " AND cid!=1";
+			
 			ResultSet rs = executeQuery(query);
 			while (rs.next())
 				ret = rs.getInt(1);
@@ -274,6 +277,9 @@ public class DatabaseManager
 		try
 		{
 			String query = "SELECT MAX(date) FROM payments WHERE sid=" + stud.getId();
+			/*** Do not count registration as a visit. ***/
+			query += " AND cid!=1";
+			
 			ResultSet rs = executeQuery(query);
 			while (rs.next())
 				ret = rs.getString(1);
@@ -355,7 +361,7 @@ public class DatabaseManager
 			Integer payed, Integer receipt) 
 	{	
 		String query = "SELECT s.lastname, s.firstname, c.yogatype, " +
-					   "p.date, p.time, p.cost, p.payed, p.receipt " + 
+					   "p.date, p.time, p.cost, p.payed, p.receipt, p.id " + 
 		               "FROM students AS s JOIN payments AS p JOIN courses AS c " +
 					   "WHERE s.id=p.sid AND c.id=p.cid";
 		
@@ -380,14 +386,15 @@ public class DatabaseManager
 				rs.beforeFirst();
 			}
 			
-			ret = new Object[length][8];
+			ret = new Object[length][9];
 			int i = 0;
 			while (rs.next()) {
-				for (int j=0; j < 8; j++)
+				for (int j=0; j < 9; j++)
 					ret[i][j] = rs.getString(j+1);
 				ret[i][5] = new Integer((String)ret[i][5]);
 				ret[i][6] = new Boolean(((String)ret[i][6]).equals("1"));
 				ret[i][7] = new Boolean(((String)ret[i][7]).equals("1"));
+				ret[i][8] = new Integer((String)ret[i][8]);
 				i++;
 			}
 			
@@ -566,6 +573,28 @@ public class DatabaseManager
 
 		executeUpdate(query);
 		payment.setId(id);
+	}
+	
+	public void updatePaymentsListDoPayed (int[] ids) {
+		if (ids.length <= 0)
+			return;
+		
+		String query = "UPDATE payments SET payed=1 WHERE id=" + ids[0];
+		for (int i=1; i<ids.length; i++)
+			query += " OR id=" + ids[i];
+		
+		executeUpdate(query);
+	}
+	
+	public void updatePaymentsListDoReceiptGiven (int[] ids) {
+		if (ids.length <= 0)
+			return;
+		
+		String query = "UPDATE payments SET receipt=1 WHERE id=" + ids[0];
+		for (int i=1; i<ids.length; i++)
+			query += " OR id=" + ids[i];
+		
+		executeUpdate(query);
 	}
 
 	public void createPaymentsTable(String tbname) {

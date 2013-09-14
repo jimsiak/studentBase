@@ -173,6 +173,9 @@ public class PaymentInputPanel extends JPanel
 			else
 				costField.setText(course.getInfoByFieldName("cost_nomembers") + "€");
 		}
+		
+		/*** Santie asked to let this field null so as she manually fills it. ***/
+		costField.setText("0€");
 	}
 
 	public void writePaymentToTextFields(Course mach)

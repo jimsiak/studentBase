@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -41,6 +42,9 @@ implements ActionListener {
 	Course filterCourse = null;
 	Integer filterPayed = -1;
 	Integer filterReceipt = -1;
+	
+	JButton updatePaymentsButton;
+	JButton updateReceiptsButton;
 
 	public PaymentsReceiptsPanelTab() {
 		this.setLayout(new BorderLayout());
@@ -96,8 +100,18 @@ implements ActionListener {
 		this.receiptFilterComboBox.addActionListener(this);
 		newPane.add(this.receiptFilterComboBox);
 		panel.add(newPane, c);
-		
 		outPanel.add(panel, BorderLayout.PAGE_START);
+		
+		/*** Add the JButtons. ***/
+		JPanel buttonsPanel = new JPanel(new GridLayout(2, 1));
+		this.updatePaymentsButton = new JButton("Εξόφλήθησαν");
+		this.updatePaymentsButton.addActionListener(this);
+		buttonsPanel.add(this.updatePaymentsButton);
+		this.updateReceiptsButton = new JButton("Κόπηκε απόδειξη");
+		this.updateReceiptsButton.addActionListener(this);
+		buttonsPanel.add(this.updateReceiptsButton);
+		outPanel.add(buttonsPanel, BorderLayout.PAGE_END);
+
 		return outPanel;
 	}
 
@@ -111,15 +125,13 @@ implements ActionListener {
 		JScrollPane scrollPane = new JScrollPane(jTable);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		jTable.setFillsViewportHeight(true);
-		jTable.setAutoCreateRowSorter(true);
 		panel.add(scrollPane, BorderLayout.CENTER);
 
 		JPanel totalStatsPanel = new JPanel();
 		//totalStatsPanel.setLayout(new BoxLayout(totalStatsPanel, BoxLayout.X_AXIS));
 		totalStatsPanel.setLayout(new BorderLayout());
 		JLabel totalLabel = new JLabel("Σύνολο:");
-		totalLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		totalLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		totalStatsPanel.add(totalLabel, BorderLayout.LINE_START);
 		this.totalStatsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		totalStatsPanel.add(this.totalStatsLabel, BorderLayout.CENTER);
@@ -150,11 +162,17 @@ implements ActionListener {
 		} else if (src == PaymentsReceiptsPanelTab.this.receiptFilterComboBox) {
 			JComboBox<String> comboBox = PaymentsReceiptsPanelTab.this.receiptFilterComboBox;
 			this.filterReceipt = comboBox.getSelectedIndex() - 1;
+		} else if (src == PaymentsReceiptsPanelTab.this.updatePaymentsButton) {
+			int[] selectedIds = PaymentsReceiptsPanelTab.this.jTable.getSelectedPaymentsIds();
+			Main.dbmanager.updatePaymentsListDoPayed(selectedIds);
+		} else if (src == PaymentsReceiptsPanelTab.this.updateReceiptsButton) {
+			int[] selectedIds = PaymentsReceiptsPanelTab.this.jTable.getSelectedPaymentsIds();
+			Main.dbmanager.updatePaymentsListDoReceiptGiven(selectedIds);
 		}
 
 		PaymentsReceiptsPanelTab.this.refresh();
 	}
-
+	
 	public void refresh ()
 	{
 		Object[][] data = Main.dbmanager.getStudentPaymentsByFilter(this.filterStudent, this.filterCourse, 

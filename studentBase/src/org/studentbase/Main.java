@@ -9,6 +9,8 @@ import org.studentbase.gui.MainTabbedFrame;
 
 public class Main
 {
+	public static String VersionString = "0.1";
+	
 	public static DatabaseManager dbmanager;
 	public static MainTabbedFrame mainFrame;
 
